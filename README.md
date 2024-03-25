@@ -14,7 +14,7 @@
 
 ## Installation
 
-1. a) Clone Repository: 'git clone https://github.com/BerkleySitterson/matrify.git'
+1. a) Clone Repository: 'git clone https://github.com/BerkleySitterson/matrify.git' <br>
    b) Alternatively, you can download the ZIP folder by locating the dropdown menu above the repository and clicking 'Download ZIP'
 
 2. Open the terminal or command prompt and navigate to the directory where the project is stored. The path should end in '/Matrify'.
