@@ -12,7 +12,7 @@ public class Operations {
         }
 
         double[][] solution = new double[rows][cols];
-
+        
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 solution[i][j] = A[i][j] + B[i][j];
@@ -59,7 +59,7 @@ public class Operations {
         return solution;
     }
      
-    public double[] rowReduce(double[][] A) {
+    public double[] gaussianElim(double[][] A) {
 
         double[] B = new double[A.length];
         for (int i = 0; i < A.length; i++) {
@@ -158,26 +158,107 @@ public class Operations {
         return det;
     }
 
-    public void displayMatrix(double[][] matrix) {
+    public double[][] transpose(double[][] A) {
 
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.print("[  ");
-            for (int j = 0; j < matrix[0].length; j++) {
-                System.out.print(matrix[i][j] + "  ");
-            }            
-            System.out.print("]\n");            
+        double[][] solution = new double[A[0].length][A.length];
+        
+        for(int i = 0; i < A[0].length; i++) {
+            for(int j = 0; j < A.length; j++) {
+                solution[i][j] = A[j][i];
+            }
         }
-        System.out.println();
+
+        return solution;
     }
 
-    public void displayVector(double[] solution)
-    {
-        for (int i = 0; i < solution.length; i++) {
-            System.out.print("[  ");
-            System.out.printf("%.2f", solution[i]);
-            System.out.print(" ]\n");            
+
+    public  double[][] inverse(double[][] A) {
+
+        double[][] inverse = new double[A.length][A[0].length];
+
+        // Find determinant of A[][]
+        double det = determinant(A);
+        if (det == 0)
+        {
+            System.out.print("Singular matrix, can't find its inverse");
         }
-        System.out.println();    
+    
+        // Find adjoint
+        double[][] adj = getAdjoint(A);
+    
+        // Find Inverse using formula "inverse(A) = adj(A)/det(A)"
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A[0].length; j++) {
+                double val = (adj[i][j]/det);
+                double roundedVal = Math.round(val * 1000.0) / 1000.0;
+                inverse[i][j] = roundedVal;
+            }
+        }
+        
+        return inverse;
+    }
+
+    public double[][] getAdjoint(double[][] A) {
+
+        double[][] temp = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A[0].length; j++) {
+                temp[i][j] = getCofactor(A, i, j);
+            }
+        }
+
+        double[][] adjoint = transpose(temp);
+        return adjoint;
+    }
+
+    public double getCofactor(double[][] A, int row, int col) {
+        double[][] minor = new double[A.length - 1][A[0].length - 1];
+        int minorRow, minorCol = 0;
+        int sign = (row + col) % 2 == 0 ? 1 : -1; // Determine the sign
+        
+        for (int i = 0; i < A.length; i++) {
+            if (i == row) continue; // Skip the current row
+            minorRow = 0;
+            for (int j = 0; j < A[0].length; j++) {
+                if (j == col) continue; // Skip the current column
+                minor[minorRow][minorCol] = A[i][j];
+                minorRow++;
+            }
+            minorCol++;
+        }
+        return sign * determinant(minor); // Apply the sign to the determinant
+    }
+    
+
+    public String displayMatrix(double[][] matrix) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < matrix.length; i++) {
+            sb.append("[  ");
+            for (int j = 0; j < matrix[0].length; j++) {
+                sb.append(matrix[i][j]).append(" ");
+            }            
+            sb.append("]\n");            
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
+    public String displayVector(double[] solution) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < solution.length; i++) {
+            sb.append("[  ");
+            sb.append(String.format("%.2f", solution[i]));
+            sb.append(" ]\n");            
+        }
+        sb.append("\n");
+
+        return sb.toString();
     }    
 
 }
